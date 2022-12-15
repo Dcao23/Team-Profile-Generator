@@ -1,0 +1,19 @@
+header {
+    background-color: rgb(172, 169, 21);
+    color: white;
+    font-size: 48px;
+    text-align: center;
+    justify-content: center;
+    height: 120px;
+    padding-top: 48px;
+}
+
+.row {
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+h1, h2 {
+    background-color: blue;
+    color: white;
+}
