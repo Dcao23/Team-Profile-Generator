@@ -8,12 +8,18 @@ header {
     padding-top: 48px;
 }
 
-.row {
-    text-align: center;
-    flex-wrap: wrap;
+.card {
+    display: flexbox;
+    align-items: center;
+    flex-direction: row;
+}
+
+.card-body {
+    border-radius: 4px;
+    box-shadow: 2px 2px;
 }
 
 h1, h2 {
-    background-color: blue;
+    background-color: rgb(1, 86, 245);
     color: white;
 }
