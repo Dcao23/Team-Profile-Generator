@@ -1,124 +1,151 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const generateHTML = require('./src/generatehtml')
+const generateHTML = require('./src/generateHTML')
 const Manager = require('./lib/Manager')
+const Engineer = require('./lib/Engineer')
 const Intern = require('./lib/Intern')
 
+const team = [];
 
-const allEmployees = [];
-
-function createManager( ){
-    //Inquirer to collect manager data
-    inquirer
-    .prompt([
+const init =() => {
+    // Inquirer to collect manager data
+    inquirer.prompt([
       /* Pass your questions in here */
       {
         type: 'input',
-        name: "name",
-        message: "What is the manager's name?"
+        name: 'name',
+        message: 'What is the managers name?'
       },
       {
         type: 'input',
-        name: "id",
-        message: "What is the manager's id?"
+        name: 'id',
+        message: 'What is the managers id?'
       },
       {
         type: 'input',
-        name: "email",
-        message: "What is the manager's email?"
+        name: 'email',
+        message: 'What is the managers email?'
       },
       {
         type: 'input',
-        name: "officeNumber",
-        message: "What is the manager's office number?"
+        name: 'officeNumber',
+        message: 'What is the managers office number?'
       }
     ])
-    .then((answers) => {
-      // Use user feedback for... whatever!!
-      console.log(answers)
-      let manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
-      allEmployees.push(manager)
-      addTeam()
+    .then((data) => {
+      console.log(data)
+      let manager = new Manager(data.name, data.id, data.email, data.officeNumber)
+      team.push(manager)
+      addTeamMember();
     })
-    .catch((error) => {
-      if (error.isTtyError) {
-        // Prompt couldn't be rendered in the current environment
-      } else {
-        // Something else went wrong
-      }
-    });
-}
+    };
 
-function addTeam() {
-    inquirer
-    .prompt([
+// Function to add new team member
+function addTeamMember() {
+    inquirer.prompt([
         {
-            type: 'input',
-            message: "Would you like to add another team member?",
-            loop: true
+          type: 'list',
+          name: 'add',
+          message: 'Would you like to add another team member?',
+          choices: ['Engineer', 'Intern', 'None']
         }
     ])
-}
+    .then((data) => {
+      if(data.add == 'Engineer') {
+        return addEngineer();
+      } else if (data.add == 'Intern') {
+        return addIntern();
+      } else {
+        return writeFile();
+      }
+    })
+};
 
-function addTeam(){
-    inquirer
-    .prompt([
+// Function to add engineer
+function addEngineer() {
+    inquirer.prompt([
         {
-            type: 'input',
-            name: "name",
-            message: "What is the engineer's name?"
-          },
-          {
-            type: 'input',
-            name: "id",
-            message: "What is the engineer's id?"
-          },
-          {
-            type: 'input',
-            name: "email",
-            message: "What is the engineer's email?"
-          },
-          {
-            type: 'input',
-            name: "officeNumber",
-            message: "What is the engineer's github?"
-          }
+          type: 'input',
+          name: 'name',
+          message: 'What is the engineers name?'
+        },
+        {
+          type: 'input',
+          name: 'id',
+          message: 'What is the engineers id?'
+        },
+        {
+          type: 'input',
+          name: 'email',
+          message: 'What is the engineers email?'
+        },
+        {
+          type: 'input',
+          name: 'officeNumber',
+          message: 'What is the engineers github?'
+        }
         ])
-        .then((answers) => {
-            console.log(answers)
-            let intern = new Intern(answers.name, answers.id, answers.email, answers.officeNumber)
-            allEmployees.push(intern)
-            addTeam()
+        .then((data) => {
+            console.log(data)
+            let engineer = new Engineer(data.name, data.id, data.email, data.officeNumber)
+            team.push(engineer)
+            addTeamMember();
           })
-          .catch((error) => {
-            if (error.isTtyError) {
-            } else {
-            }
-        });
-    }
-    //inquirer to ask if user wants to 
-    //add Engineer
-    //add Intern
-    //finish building Team
+        };
 
-  
-    /* Pass your questions in here */
+function addTeamMember() {
+    inquirer.prompt([
+        {
+          type: 'list',
+          name: 'add',
+          message: 'Would you like to add another team member?',
+          choices: ['Engineer', 'Intern', 'None']
+        }
+        ])
+        .then((data) => {
+        if(data.add == 'Engineer') {
+        addEngineer();
+        } else if (data.add == 'Intern') {
+        addIntern();
+        } else {
+        writeFile();
+      }
+    })
+};
 
-
-    // Use user feedback for... whatever!!
-   // if() engineer, call createEngineer()
-   // if() intern, call createIntern()
-   //if fiish, call buildTeam()
-
-
-      // Prompt couldn't be rendered in the current environment
-
-      // Something else went wrong
-
-
-
-
-function buildTeam(){
-   // fs.writeFile()
+function addIntern() {
+  inquirer.prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is the interns name?'
+      },
+      {
+        type: 'input',
+        name: 'id',
+        message: 'What is the interns id?'
+      },
+      {
+        type: 'input',
+        name: 'email',
+        message: 'What is the interns email?'
+      },
+      {
+        type: 'input',
+        name: 'officeNumber',
+        message: 'What is the interns github?'
+      }
+      ])
+      .then((data) => {
+          console.log(data)
+          let intern = new Intern(data.name, data.id, data.email, data.officeNumber)
+          team.push(intern)
+          addTeamMember();
+        })
+      };
+// fs.writeFile()
+function writeFile(){
+  console.log(generateHTML(team))
+  fs.writeFileSync('./dist/index.html', generateHTML(team));
 }
-createManager()
+init();

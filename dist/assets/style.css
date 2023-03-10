@@ -8,10 +8,15 @@ header {
     padding-top: 48px;
 }
 
-.card {
-    display: flexbox;
+.mainCard {
+    display: flex;
     align-items: center;
-    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    margin-left: 40px;
 }
 
 .card-body {
